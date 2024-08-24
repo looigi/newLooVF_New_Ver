@@ -1,0 +1,48 @@
+
+<span *ngIf="immaginiRilevate" style="font-size: 12px; height: 35px;">Immagini rilevate: {{immaginiRilevate.length - 1}} - Selezionati: {{quantiSelezionati}}</span>
+<div *ngIf="immaginiRilevate" style="width: calc(100% - 35px); height: calc(100% - 30px); overflow: auto;">
+    <div *ngFor="let i of immaginiRilevate" class="immagineFuoriCategoria ombra">
+        <div style="width: 100%; height: calc(100% - 40px); float: left; display: flex;">
+        <div style="width: 20px; float: left;">
+            <input type="checkbox" [checked]="i.Selezionata" (change)="ciSonoSelezionati(i)" />
+            <br />
+            <img src="assets/immagini/icons/icona_ELIMINA-TAG.png" class="iconaFC2" title="Elimina immagine" (click)="eliminaImmagine(i, 'UGUALI')" />
+            <br />
+            <img src="assets/immagini/icons/icona_MODIFICA-TAG.png" class="iconaFC2" title="Sposta immagine ad altra categoria" (click)="spostaImmagineACategoriaDaFC1(i)" />
+        </div>
+        <div style="width: calc(100% - 20px); float: left;">
+            <img [src]="i.UrlImmagine" class="iconaFuoriCategoria" (click)="visualizzaImmagine(i)" />
+        </div>
+        </div>
+        <div style="width: 100%; height: 35px; float: left; font-size: 13px; padding-top: 5px; overflow: auto;">
+        {{i.Cartella}}\{{i.NomeFile}}<br />
+        -{{i.Categoria}}-
+        </div>
+    </div>
+</div>
+
+<div *ngIf="immaginiRilevate && bCiSonoSelezionati" class="bottoneChiusura" style="margin-top: 35px;">
+    <img src="assets/immagini/icons/icona_MODIFICA-TAG.png" class="iconaMenu" (click)="esegueSpostamento()" />
+</div>
+
+<div *ngIf="sceltaCategoria" class="sceltaCategoria ombra">
+    <select name="categorie" id="categoria3" style="width: calc(100% - 40px);" [(ngModel)]="idCategoriaSelezionataPerSpostamento" (click)="cambioCategoriaPerSpostamento(idCategoriaSelezionataPerSpostamento)">
+      <option *ngFor="let c of Categorie" value="{{c.idCategoria}}">{{c.Categoria}}</option>
+    </select>
+
+    <div class="bottoneChiusura" style="margin-top: 35px;">
+      <img src="assets/immagini/icons/icona_MODIFICA-TAG.png" class="iconaMenu" (click)="spostaImmagineACategoriaDaFC2()" />
+    </div>
+
+    <div class="bottoneChiusura">
+      <img src="assets/immagini/icons/elimina_quadrato.png" class="iconaMenu" (click)="sceltaCategoria = false" />
+    </div>
+</div>
+
+<div *ngIf="bVisualizzaImmagine" class="visualizzaImmagine">
+    <img [src]="immagineDaVisualizzare" class="iconaVisualizza" />
+
+    <div class="bottoneChiusura">
+      <img src="assets/immagini/icons/elimina_quadrato.png" class="iconaMenu" (click)="bVisualizzaImmagine = false" />
+    </div>
+</div>

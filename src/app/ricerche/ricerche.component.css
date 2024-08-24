@@ -1,0 +1,108 @@
+.immagineFuoriCategoria {
+    width: 150px;
+    height: 150px;
+    background: white;
+    float: left;
+    padding: 2px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    text-align: center;
+    margin: 7px;
+}
+
+.iconaFuoriCategoria {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.iconaFC2 {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.bottoneChiusura {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
+
+.iconaMenu {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.visualizzaImmagine {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    font-family: math;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: #f7f0c3;
+}
+
+.iconaVisualizza {
+    width: 100%;
+    height: 100%;    
+}
+
+.sceltaCategoria {
+    position: absolute;
+    left: 35%;
+    top: calc(50% - 25px);
+    font-family: math;
+    width: 30%;
+    height: 70px;
+    padding: 3px;
+    background-color: #f7f0c3;
+    border: 1px solid #999;
+    border-radius: 3px;
+    z-index: 11;
+}
+
+@media screen and (max-width: 500px) {
+    .immaginiFuoriCategoria {
+        position: absolute;
+        left: 15%;
+        top: 15%;
+        font-family: math;
+        width: 70%;
+        /* overflow: auto; */
+        height: 70%;
+        padding: 3px;
+        border: 1px solid #999;
+        background-color: #f7f0c3;
+        border-radius: 3px;
+        z-index: 5;
+    }
+
+    .immagineFuoriCategoria {
+        width: 100px;
+        height: 100px;
+        background: white;
+        float: left;
+        padding: 2px;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        text-align: center;
+        margin: 7px;
+    }
+
+    .sceltaCategoria {
+        position: absolute;
+        left: 15%;
+        top: calc(50% - 25px);
+        font-family: math;
+        width: 70%;
+        height: 70px;
+        padding: 3px;
+        background-color: #f7f0c3;
+        border: 1px solid #999;
+        border-radius: 3px;
+        z-index: 11;
+    }
+}

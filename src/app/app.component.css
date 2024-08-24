@@ -1,0 +1,264 @@
+body {
+    overflow: hidden;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 5px;
+}
+
+.barraSinistra {
+    position: absolute;
+    left: 0px;
+    top: calc(50% - 25px);
+    width: auto;
+    height: 50px;
+    z-index: 3;
+    /* padding-top: calc(35% - 15px); */
+}
+
+.barraDestra {
+    position: absolute;
+    right: 0px;
+    top: calc(50% - 25px);
+    width: auto;
+    height: 50px;
+    z-index: 3;
+    /* padding-top: calc(35% - 15px); */
+}
+
+.centrale {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    z-index: 1;
+    text-align: center;
+    background-color: #c3c3c3;
+}
+
+.informazioni {
+    position: absolute;
+    bottom: 0px;
+    height: auto;
+    width: calc(100% - 18px);
+    left: 0px;
+    padding: 6px;
+    margin: 2px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    z-index: 2;
+    overflow-x: auto;
+    background-color: aliceblue;
+    overflow-y: hidden;
+}
+
+.informazioniChiuse {
+    position: absolute;
+    bottom: 0px;
+    height: 30px;
+    width: 30px;
+    left: 0px;
+    padding: 3px;
+    margin: 2px;
+    /* border: 1px solid #999; */
+    /* border-radius: 3px; */
+    z-index: 2;
+    /* background-color: aliceblue; */
+}
+
+.icona {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.casellaInfo {
+    font-family: math;
+    width: auto;
+    padding: 2px;
+    float: left;
+}
+
+.ombra {
+    -webkit-box-shadow: -2px 5px 19px 4px #000000;
+    -moz-box-shadow: -2px 5px 19px 4px #000000;
+    -o-box-shadow: -2px 5px 19px 4px #000000;
+    box-shadow: -2px 5px 19px 4px #000000;
+}
+
+.categorie {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    font-family: math;
+    width: auto;
+    padding: 3px;
+    border: 1px solid #999;
+    background-color: #fffdf0;
+    border-radius: 3px;
+    z-index: 3
+}
+
+.attesa {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    opacity: .75;
+    z-index: 100;
+    text-align: center;
+}
+
+.attesaGif {
+    width: 150px;
+    height: 150px;
+    margin-top: calc(50vh - 75px);
+}
+
+.menu {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    font-family: math;
+    width: auto;
+    height: 35px;
+    padding: 3px;
+    /* border: 1px solid #999; */
+    /* background-color: #fffdf0; */
+    /* border-radius: 3px; */
+    z-index: 3;
+}
+
+.bottoneMenu {
+    float: right;
+    width: auto;
+    height: auto;
+    padding: 3px;
+}
+
+.iconaMenu {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.bottoneChiusura {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
+
+.menuFinestra {
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    font-family: math;
+    width: 40%;
+    height: 40%;
+    padding: 3px;
+    border: 1px solid #999;
+    background-color: #f7f0c3;
+    border-radius: 3px;
+    z-index: 4;
+    overflow: auto;
+}
+
+.mascheraFuoriCategoria {
+    position: absolute;
+    left: 30%;
+    top: 40%;
+    font-family: math;
+    width: 40%;
+    height: auto;
+    padding: 3px;
+    border: 1px solid #999;
+    background-color: #f7f0c3;
+    border-radius: 3px;
+    z-index: 5;
+}
+
+.iconaVisualizza {
+    width: 100%;
+    height: 100%;    
+}
+
+.iconaUguali {
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+}
+
+.immaginiFuoriCategoria {
+    position: absolute;
+    left: 15%;
+    top: 15%;
+    font-family: math;
+    width: 70%;
+    /* overflow: auto; */
+    height: 70%;
+    padding: 3px;
+    border: 1px solid #999;
+    background-color: #f7f0c3;
+    border-radius: 3px;
+    z-index: 5;
+}
+
+.mascheraUguali {
+    position: absolute;
+    z-index: 9;
+    left: 5px;
+    top: 5px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border: 1px solid #999;
+    border-radius: 3px;
+    background-color: #fdffef;
+}
+
+.ricercheCategoria {
+    position: absolute;
+    z-index: 9;
+    left: 5px;
+    top: 38px;
+    width: calc(100% - 10px);
+    height: calc(100% - 45px);
+    border: 1px solid #999;
+    border-radius: 3px;
+    background-color: #fdffef;
+}
+
+@media screen and (max-width: 500px) {
+    .menuFinestra {
+        position: absolute;
+        left: 15%;
+        top: 35%;
+        font-family: math;
+        width: 70%;
+        height: 30%;
+        padding: 3px;
+        border: 1px solid #999;
+        background-color: #f7f0c3;
+        border-radius: 3px;
+        z-index: 4;
+    }
+
+    .mascheraFuoriCategoria {
+        position: absolute;
+        left: 15%;
+        top: 40%;
+        font-family: math;
+        width: 70%;
+        height: auto;
+        padding: 3px;
+        border: 1px solid #999;
+        background-color: #f7f0c3;
+        border-radius: 3px;
+        z-index: 5;
+    }
+}
