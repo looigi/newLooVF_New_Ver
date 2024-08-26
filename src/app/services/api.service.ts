@@ -155,13 +155,37 @@ export class ApiService {
   }
 
   ritornaImmaginiCategoria(t, params) {
-    const url = this.urlWS + '/RitornaImmaginiCategoria?idCategoria=' + params.idCategoria + '&Filtro=' + params.Filtro
+    const url = this.urlWS + '/RitornaImmaginiCategoria?idCategoria=' + params.idCategoria + '&Filtro=' + params.Filtro + '&AndOr=' + params.AndOr
       ;
     return this.carica(t, url);
   }
 
   ritornaImmaginiUgualiConFiltro(t, tipologia, filtro) {
     const url = this.urlWS + '/RitornaImmaginiUgualiConFiltro?Modalita=' + tipologia + '&Filtro=' + filtro
+      ;
+    return this.carica(t, url);
+  }
+
+  salvaAlias(t, idCategoria, Alias) {
+    const url = this.urlWS + '/SalvaAlias?idCategoria=' + idCategoria + '&sAlias=' + Alias
+      ;
+    return this.carica(t, url);
+  }
+
+  nuoveCategorie(t, idCategoria) {
+    const url = this.urlWS + '/TrovaNuoveCategorieDentroCategoria?idCategoria=' + idCategoria
+      ;
+    return this.carica(t, url);
+  }
+
+  creaNuovaCategoria(t, Categoria) {
+    const url = this.urlWS + '/CreaNuovaCategoria?Categoria=' + Categoria
+      ;
+    return this.carica(t, url);
+  }
+
+  TrovaNomiSuDbInBaseAllaNuovaCategoria(t, idCategoria, Filtro) {
+    const url = this.urlWS + '/TrovaNomiSuDbInBaseAllaNuovaCategoria?idCategoria=' + idCategoria + '&Filtro=' + Filtro
       ;
     return this.carica(t, url);
   }

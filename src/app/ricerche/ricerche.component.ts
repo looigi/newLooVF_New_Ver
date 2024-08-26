@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { ApiService } from "../services/api.service";
 
 @Component({
@@ -7,11 +7,12 @@ import { ApiService } from "../services/api.service";
     templateUrl: './ricerche.component.html',
     styleUrls: ['./ricerche.component.css']
 })
-export class RicercheComponent {
+export class RicercheComponent implements OnInit, OnChanges {
     @Input() immaginiRilevate;
     @Input() idCategoriaSelezionata;
     @Input() immagineAttuale;
     @Input() Categorie;
+    @Input() dimensioniSchermo;
 
     @Output() ricaricaImmagini: EventEmitter<any> = new EventEmitter<any>();
     @Output() caricaProssimaImmagine: EventEmitter<any> = new EventEmitter<any>();
@@ -28,13 +29,61 @@ export class RicercheComponent {
     immagineDaVisualizzare;
     bVisualizzaImmagine = false;
     sceltaCategoria = false;
+    schermoX;
+    schermoY;
+    mobile = false;
+    dimensioneThumbX = 200;
+    dimensioneThumbY = 200;
+    staCaricando = false;
 
     constructor(
         private http: HttpClient,
         private apiService: ApiService,    
     ) {
+        const idX = localStorage.getItem('LooVFDimeThumbX');
+        if (idX !== null) {
+          this.dimensioneThumbX = +idX;
+        }
+
+        const idY = localStorage.getItem('LooVFDimeThumbY');
+        if (idY !== null) {
+          this.dimensioneThumbY = +idY;
+        }
     }
   
+    esceThumbX() {
+        localStorage.setItem('LooVFDimeThumbX', this.dimensioneThumbX.toString());
+    }
+
+    esceThumbY() {
+        localStorage.setItem('LooVFDimeThumbY', this.dimensioneThumbY.toString());
+    }
+
+    ngOnInit(): void {
+        
+    }
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['dimensioniSchermo']) {
+            if (changes['dimensioniSchermo'].currentValue) {
+                const c = changes['dimensioniSchermo'].currentValue.split(";");
+                this.schermoX = (+c[0]) * .7;
+                this.schermoY = +c[1];
+                this.mobile = c[2] === 'S';
+
+                if (this.mobile) {
+                    this.dimensioneThumbX = 100;
+                    this.dimensioneThumbY = 100;
+                } else {
+                    this.dimensioneThumbX = 200;
+                    this.dimensioneThumbY = 200;
+                }
+
+                this.prendeDimensioniImmagine(this.immagineAttuale);
+            }
+        }
+    }
+
     ciSonoSelezionati(i) {
         let Ritorno = false;
     
@@ -196,4 +245,84 @@ export class RicercheComponent {
         this.spostaImmagineACategoria(this.idCategoriaSelezionataPerSpostamento, true);
         this.sceltaCategoria = false;
     }    
+
+    margineX;
+    margineY;
+    dimeXImmagine;
+    dimeYImmagine;
+
+    prendeDimensioniImmagine(immagine) {
+        if (!immagine) {
+            return;
+        }
+
+        const dimensione = immagine.DimensioniImmagine;
+        if (dimensione.indexOf('x') > -1) {
+          const d = dimensione.split('x');
+          let x = +d[0];
+          let y = +d[1];
+          // console.log('Dime originali', x, y);
+    
+          if (x < (this.schermoX - 5) && y < (this.schermoY - 5)) {
+            this.margineX = 2;
+            this.margineY = 2;
+            this.dimeXImmagine = x;
+            this.dimeYImmagine = y;
+          } else {
+            let maxX;
+    
+            if (x > y) {
+              maxX = x;
+            } else {
+              if (x < y) {
+                maxX = y;
+              } else {
+                maxX = x;
+              }
+            }
+    
+            const percX = ((this.schermoX - 5) / x);
+            const percY = ((this.schermoY - 5) / y);
+            // console.log('Percs', percX, percY);
+    
+            let x1;
+            let y1;
+            if (percX < percY) {
+              x1 = x * percX;
+              y1 = y * percX;
+            } else {
+              x1 = x * percY;
+              y1 = y * percY;
+            }
+    
+            // console.log('X1/Y1', x1, y1);
+    
+            this.dimeXImmagine = Math.floor(x1);
+            this.dimeYImmagine = Math.floor(y1);
+          }
+        }
+    
+        this.margineX = Math.floor(Math.floor(this.schermoX / 2) - Math.floor(this.dimeXImmagine / 2));
+        this.margineY = Math.floor(Math.floor(this.schermoY / 2) - Math.floor(this.dimeYImmagine / 2));
+    
+        // console.log('Dimensioni', this.dimeXImmagine, this.dimeYImmagine, this.margineX, this.margineY);
+    }
+   
+    SelezionaTutti() {
+        this.immaginiRilevate.forEach(element => {
+            element.Selezionata = true;
+        });
+
+        this.quantiSelezionati = this.immaginiRilevate.length;
+        this.bCiSonoSelezionati = true;
+    }
+
+    DeselezionaTutti() {
+        this.immaginiRilevate.forEach(element => {
+            element.Selezionata = false;
+        });
+
+        this.quantiSelezionati = 0;
+        this.bCiSonoSelezionati = false;
+    }
 }  

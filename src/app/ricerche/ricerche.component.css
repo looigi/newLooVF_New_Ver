@@ -35,19 +35,38 @@
 }
 
 .visualizzaImmagine {
-    position: absolute;
+    position: fixed;
     left: 0px;
+    text-align: center;
     top: 0px;
     font-family: math;
     width: 100%;
     height: 100%;
     z-index: 10;
-    background-color: #f7f0c3;
+    /* background-color: #f7f0c3; */
 }
 
 .iconaVisualizza {
     width: 100%;
     height: 100%;    
+}
+
+.attesa {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    opacity: .75;
+    z-index: 100;
+    text-align: center;
+}
+
+.attesaGif {
+    width: 150px;
+    height: 150px;
+    margin-top: calc(50vh - 75px);
 }
 
 .sceltaCategoria {
@@ -62,6 +81,25 @@
     border: 1px solid #999;
     border-radius: 3px;
     z-index: 11;
+}
+
+.immagineFuoriCategoria {
+    width: 150px;
+    height: 150px;
+    background: white;
+    float: left;
+    padding: 2px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    text-align: center;
+    margin: 7px;
+}
+
+.ombra {
+    -webkit-box-shadow: -2px 5px 19px 4px #000000;
+    -moz-box-shadow: -2px 5px 19px 4px #000000;
+    -o-box-shadow: -2px 5px 19px 4px #000000;
+    box-shadow: -2px 5px 19px 4px #000000;
 }
 
 @media screen and (max-width: 500px) {
@@ -80,6 +118,13 @@
         z-index: 5;
     }
 
+    .ombra {
+        -webkit-box-shadow: -2px 5px 12px 4px #000000;
+        -moz-box-shadow: -2px 5px 12px 4px #000000;
+        -o-box-shadow: -2px 5px 12px 4px #000000;
+        box-shadow: -2px 5px 12px 4px #000000;
+    }
+    
     .immagineFuoriCategoria {
         width: 100px;
         height: 100px;
@@ -89,9 +134,9 @@
         border: 1px solid #aaa;
         border-radius: 2px;
         text-align: center;
-        margin: 7px;
+        margin: 4px;
     }
-
+    
     .sceltaCategoria {
         position: absolute;
         left: 15%;

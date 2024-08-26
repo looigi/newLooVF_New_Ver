@@ -35,6 +35,7 @@ export class AppComponent {
   aliasPerFC1 = '';
   aliasPerFC2 = '';
   ricercaPerAnd = false;
+  ricercaPerAnd2 = false;
   mascheraUguali = false;
   tipoRicercaUguali = 4;
   immaginiUguali;
@@ -45,6 +46,14 @@ export class AppComponent {
   indiceSpostamento;
   FiltroCategoria = '';
   immaginiRilevateCategoria;
+  dimensioniSchermo;
+  mascheraNuoveCategorie = false;
+  nuoveCategorie;
+  nuoveCategorieFiltro;
+  nuovaCategoriaSelezionata;
+  mascheraSistemazioni = false;
+  nomeNuovaCategoria = '';
+  mascheraNomeNuovaCategoria = false;
 
   constructor(
     private http: HttpClient,
@@ -90,6 +99,11 @@ export class AppComponent {
     const idRa = localStorage.getItem('LooVFRicercaPerAnd');
     if (idRa !== null) {
       this.ricercaPerAnd = idRa === 'S' ? true : false;
+    }
+
+    const idRa2 = localStorage.getItem('LooVFRicercaPerAnd2');
+    if (idRa2 !== null) {
+      this.ricercaPerAnd2 = idRa2 === 'S' ? true : false;
     }
 
     const idRcs = localStorage.getItem('LooVFRicercaCaratteri');
@@ -278,6 +292,8 @@ export class AppComponent {
       // console.log('false')
     }
 
+    this.dimensioniSchermo = this.schermoX + ';' + this.schermoY + ';' + (this.mobile ? 'S' : 'N');
+
     if (this.immagineAttuale) {
       this.immagineAttuale.urlImmagine = undefined;
       this.prendeDimensioniImmagine(this.immagineAttuale);
@@ -373,6 +389,11 @@ export class AppComponent {
   cambiaRicAnd() {
     this.ricercaPerAnd = !this.ricercaPerAnd;
     localStorage.setItem('LooVFRicercaPerAnd', this.ricercaPerAnd ? 'S' : 'N');
+  }
+
+  cambiaRicAnd2() {
+    this.ricercaPerAnd2 = !this.ricercaPerAnd2;
+    localStorage.setItem('LooVFRicercaPerAnd2', this.ricercaPerAnd2 ? 'S' : 'N');
   }
 
   cambioCaratteri() {
@@ -562,7 +583,8 @@ export class AppComponent {
   immaginiCategoria() {
     const params = {
       idCategoria: this.idCategoriaSelezionata,
-      Filtro: this.FiltroCategoria
+      Filtro: this.FiltroCategoria,
+      AndOr: this.ricercaPerAnd2 ? 'And' : 'Or'
     }
     this.immaginiRilevateCategoria = undefined;
     
@@ -591,5 +613,105 @@ export class AppComponent {
           }
         }
     );
+  }
+
+  salvaAlias() {
+    let alias = this.aliasPerFC1 + ';' + this.aliasPerFC2 + ';';
+    while (alias.indexOf(';;') > -1) {
+      alias = alias.replace(';;', ';');
+    }
+    console.log('Salvo alias', alias);
+    this.apiService.salvaAlias(this, this.idCategoriaSelezionata, alias)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              alert('Alias modificato');
+            } else {
+              alert(data2);
+            }
+          }
+        }
+    );
+  }
+
+  ricercaNuoveCategorie() {
+    this.apiService.nuoveCategorie(this, this.idCategoriaSelezionata)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              this.nuoveCategorie = JSON.parse(data2).Categorie;
+              let p = false;
+              this.nuoveCategorie.forEach(element => {
+                element.Pari = p;
+                element.Premuto = false;
+                p = !p;
+              });
+              console.log('Nuove Categorie', this.nuoveCategorie);
+            } else {
+              alert(data2);
+            }
+          }
+        }
+    );    
+  }
+
+  selezioneNuovaCategoria(c) {
+    this.nuoveCategorie.forEach(element => {
+      element.Premuto = false;
+    });
+    c.Premuto = true;
+    console.log('Click Nuova Categoria', c);
+    this.nuovaCategoriaSelezionata = c.Categoria;
+
+    this.apiService.TrovaNomiSuDbInBaseAllaNuovaCategoria(this, this.idCategoriaSelezionata, c.Categoria)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              this.nuoveCategorieFiltro = JSON.parse(data2).Immagini;
+              console.log('Nuove Categorie Filtrate', this.nuoveCategorieFiltro);
+            } else {
+              alert(data2);
+            }
+          }
+        }
+    );    
+  }
+
+  creaNuovaCategoria() {
+    console.log('Click Crea Nuova Categoria', this.nuovaCategoriaSelezionata);
+    this.nomeNuovaCategoria = this.nuovaCategoriaSelezionata;
+    this.mascheraNomeNuovaCategoria = true;
+  }
+
+  salvaNuovaCategoria() {
+    if (!this.nomeNuovaCategoria) {
+      alert('Inserire il nome della categoria');
+      return;
+    }
+    this.apiService.creaNuovaCategoria(this, this.nomeNuovaCategoria)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              this.caricaCategorie();
+              this.mascheraNuoveCategorie = false;
+              alert('Nuova Categoria Creata');
+            } else {
+              alert(data2);
+            }
+          }
+        }
+    );    
   }
 }

@@ -1,22 +1,41 @@
 
-<span *ngIf="immaginiRilevate" style="font-size: 12px; height: 35px;">Immagini rilevate: {{immaginiRilevate.length - 1}} - Selezionati: {{quantiSelezionati}}</span>
-<div *ngIf="immaginiRilevate" style="width: calc(100% - 35px); height: calc(100% - 30px); overflow: auto;">
-    <div *ngFor="let i of immaginiRilevate" class="immagineFuoriCategoria ombra">
+<div style="width: 100%; height: 23px; text-align: center; border-bottom: 1px solid #999;">
+    <div style="width: 25%; float: left; white-space: nowrap; overflow: auto;">
+        <span *ngIf="!mobile && immaginiRilevate" style="font-family: math; font-size: 15px;">Immagini rilevate: {{immaginiRilevate.length}} - Selezionate: {{quantiSelezionati}}</span>
+        <span *ngIf="mobile && immaginiRilevate" style="font-family: math; font-size: 15px;">Imm.: {{immaginiRilevate.length}} - Sel.: {{quantiSelezionati}}</span>
+    </div>
+    <div *ngIf="immaginiRilevate" style="width: 22%; float: left; text-align: center; overflow: auto;">
+        <input type="button" value="Sel. Tutti" (click)="SelezionaTutti()" />
+    </div>
+    <div *ngIf="immaginiRilevate" style="width: 22%; float: left; text-align: center; overflow: auto;">
+        <input type="button" value="Desel. Tutti" (click)="DeselezionaTutti()" />
+    </div>
+    <div *ngIf="immaginiRilevate" style="width: 30%; float: left; text-align: center; white-space: nowrap; overflow: auto;">
+        <span *ngIf="!mobile">Thumbs&nbsp;</span>
+        <input type="number" [(ngModel)]="dimensioneThumbX" style="width: 40px;" (focusout)="esceThumbX()" />
+        &nbsp;
+        <input type="number" [(ngModel)]="dimensioneThumbY" style="width: 40px;" (focusout)="esceThumbY()" />
+    </div>
+</div>
+<div *ngIf="immaginiRilevate" style="width: calc(100% - 25px); height: calc(100% - 30px); overflow: auto;">
+    <div *ngFor="let i of immaginiRilevate" class="immagineFuoriCategoria ombra"
+        [style.width.px]="dimensioneThumbX" [style.height.px]="dimensioneThumbY"
+        >
         <div style="width: 100%; height: calc(100% - 40px); float: left; display: flex;">
-        <div style="width: 20px; float: left;">
-            <input type="checkbox" [checked]="i.Selezionata" (change)="ciSonoSelezionati(i)" />
-            <br />
-            <img src="assets/immagini/icons/icona_ELIMINA-TAG.png" class="iconaFC2" title="Elimina immagine" (click)="eliminaImmagine(i, 'UGUALI')" />
-            <br />
-            <img src="assets/immagini/icons/icona_MODIFICA-TAG.png" class="iconaFC2" title="Sposta immagine ad altra categoria" (click)="spostaImmagineACategoriaDaFC1(i)" />
-        </div>
-        <div style="width: calc(100% - 20px); float: left;">
-            <img [src]="i.UrlImmagine" class="iconaFuoriCategoria" (click)="visualizzaImmagine(i)" />
-        </div>
+            <div style="width: 20px; float: left;">
+                <input type="checkbox" [checked]="i.Selezionata" (change)="ciSonoSelezionati(i)" />
+                <br />
+                <img src="assets/immagini/icons/icona_ELIMINA-TAG.png" class="iconaFC2" title="Elimina immagine" (click)="eliminaImmagine(i, 'UGUALI')" />
+                <br />
+                <img src="assets/immagini/icons/icona_MODIFICA-TAG.png" class="iconaFC2" title="Sposta immagine ad altra categoria" (click)="spostaImmagineACategoriaDaFC1(i)" />
+            </div>
+            <div style="width: calc(100% - 20px); float: left;">
+                <img [src]="i.UrlImmagine" class="iconaFuoriCategoria" (click)="visualizzaImmagine(i)" />
+            </div>
         </div>
         <div style="width: 100%; height: 35px; float: left; font-size: 13px; padding-top: 5px; overflow: auto;">
-        {{i.Cartella}}\{{i.NomeFile}}<br />
-        -{{i.Categoria}}-
+            {{i.Cartella}}\{{i.NomeFile}}<br />
+            -{{i.Categoria}}-
         </div>
     </div>
 </div>
@@ -40,9 +59,19 @@
 </div>
 
 <div *ngIf="bVisualizzaImmagine" class="visualizzaImmagine">
-    <img [src]="immagineDaVisualizzare" class="iconaVisualizza" />
-
-    <div class="bottoneChiusura">
-      <img src="assets/immagini/icons/elimina_quadrato.png" class="iconaMenu" (click)="bVisualizzaImmagine = false" />
+    <div class="bottoneChiusura" style="position: relative;">
+        <img src="assets/immagini/icons/elimina_quadrato.png" class="iconaMenu" (click)="bVisualizzaImmagine = false" />
     </div>
+
+      <!-- <img [src]="immagineDaVisualizzare" class="iconaVisualizza" /> -->
+
+    <img *ngIf="immagineDaVisualizzare" class="ombra" [src]="immagineDaVisualizzare"
+        [style.margin-top.px]="margineY"
+        [style.width.px]="dimeXImmagine" [style.height.px]="dimeYImmagine" />
+
 </div>
+
+<div *ngIf="staCaricando" class="attesa">
+    <img src="assets/immagini/icons/please_wait.gif" class="attesaGif" />
+</div>
+  
