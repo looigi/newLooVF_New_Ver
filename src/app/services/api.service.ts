@@ -172,6 +172,12 @@ export class ApiService {
     return this.carica(t, url);
   }
 
+  salvaTag(t, idCategoria, Tag) {
+    const url = this.urlWS + '/SalvaTag?idCategoria=' + idCategoria + '&sTag=' + Tag
+      ;
+    return this.carica(t, url);
+  }
+
   nuoveCategorie(t, idCategoria) {
     const url = this.urlWS + '/TrovaNuoveCategorieDentroCategoria?idCategoria=' + idCategoria
       ;
@@ -196,7 +202,21 @@ export class ApiService {
       '&Aliases1=' + params.Aliases1 +
       '&Aliases2=' + params.Aliases2 +
       '&QuantiCaratteri=' + params.QuantiCaratteri +
-      '&AndOr=' + params.AndOr
+      '&AndOr=' + params.AndOr + 
+      '&SoloSuAltro=' + params.SoloSuAltro + 
+      '&CercaExif=' + params.CercaExif + 
+      '&Tag=' + params.Tag
+      ;
+    return this.carica(t, url);
+  }
+
+  trovaImmaginiFuoriCategoriaTutte(t, params) {
+    const url = this.urlWS + '/TrovaNomiSuDbFuoriDaTutteLeCategoria?' +
+      '&QuantiCaratteri=' + params.QuantiCaratteri +
+      '&AndOr=' + params.AndOr + 
+      '&SoloSuAltro=' + params.SoloSuAltro + 
+      '&CercaExif=' + params.CercaExif + 
+      '&Tag=' + params.Tag
       ;
     return this.carica(t, url);
   }

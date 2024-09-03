@@ -34,6 +34,7 @@ export class AppComponent {
   mascheraFuoriCategoria = false;
   aliasPerFC1 = '';
   aliasPerFC2 = '';
+  tagCategoria = '';
   ricercaPerAnd = false;
   ricercaPerAnd2 = false;
   mascheraUguali = false;
@@ -54,6 +55,9 @@ export class AppComponent {
   mascheraSistemazioni = false;
   nomeNuovaCategoria = '';
   mascheraNomeNuovaCategoria = false;
+  soloSuAltro = true;
+  cercaExif = false;
+  cercaTag = false;
 
   constructor(
     private http: HttpClient,
@@ -84,6 +88,21 @@ export class AppComponent {
     const idInfo = localStorage.getItem('LooVFInfoVisibili');
     if (idInfo !== null) {
       this.info = idInfo === 'S' ? true : false;
+    }
+
+    const rsa = localStorage.getItem('LooVFRicercaSoloSuAltro');
+    if (rsa !== null) {
+      this.soloSuAltro = rsa === 'S' ? true : false;
+    }
+
+    const rce = localStorage.getItem('LooVFRicercaCercaExif');
+    if (rce !== null) {
+      this.cercaExif = rce === 'S' ? true : false;
+    }
+    
+    const rct = localStorage.getItem('LooVFRicercaCercaTag');
+    if (rct !== null) {
+      this.cercaTag = rct === 'S' ? true : false;
     }
 
     const idRc = localStorage.getItem('LooVFRicercaPerCarattere');
@@ -121,6 +140,7 @@ export class AppComponent {
       if (idI !== null) {
         this.immagineAttuale = JSON.parse(idI);
         this.prendeAlias(this.immagineAttuale.Alias);
+        this.tagCategoria = this.immagineAttuale.Tag;
         this.prendeDimensioniImmagine(this.immagineAttuale);
       } else {
         this.immagineAttuale = undefined;
@@ -176,6 +196,7 @@ export class AppComponent {
             const immagine = JSON.parse(data2);
             this.immagineAttuale = undefined;
             this.prendeAlias(immagine.Alias);
+            this.tagCategoria = immagine.Tag;
             this.prendeDimensioniImmagine(immagine);
             setTimeout(() => {
               this.immagineAttuale = immagine;
@@ -341,7 +362,7 @@ export class AppComponent {
 
   immaginiFuoriCategoria() {
     let Caratteri = this.CaratteriRicerca.toString().trim();
-    if (!this.ricercaPerCarattere) {
+    if (this.ricercaPerCarattere === true) {
       Caratteri = '';
     }
 
@@ -350,7 +371,10 @@ export class AppComponent {
       Aliases1: this.aliasPerFC1 ? this.aliasPerFC1 : '',
       Aliases2: this.aliasPerFC2 ? this.aliasPerFC2 : '',
       QuantiCaratteri: Caratteri,
-      AndOr: this.ricercaPerAnd ? 'And' : 'Or'
+      AndOr: this.ricercaPerAnd ? 'And' : 'Or',
+      SoloSuAltro: this.soloSuAltro ? 'S' : 'N',
+      CercaExif: this.cercaExif ? 'S' : 'N',
+      Tag: this.cercaTag ? this.tagCategoria : ''
     }
     this.immaginiRilevateFuoriCategoria = undefined;
     
@@ -381,18 +405,83 @@ export class AppComponent {
     );
   }
 
+  immaginiFuoriCategoriaTutte() {
+    let Caratteri = this.CaratteriRicerca.toString().trim();
+    if (this.ricercaPerCarattere === true) {
+      Caratteri = '';
+    }
+
+    const params = {
+      QuantiCaratteri: Caratteri,
+      AndOr: this.ricercaPerAnd ? 'And' : 'Or',
+      SoloSuAltro: this.soloSuAltro ? 'S' : 'N',
+      CercaExif: this.cercaExif ? 'S' : 'N',
+      Tag: this.cercaTag ? this.tagCategoria : ''
+    }
+    this.immaginiRilevateFuoriCategoria = undefined;
+    
+    this.apiService.trovaImmaginiFuoriCategoriaTutte(this, params)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              const resoconto = JSON.parse(data2);
+              console.log('Immagini rilevate su tutte le categorie', resoconto);
+
+              resoconto.Immagini.forEach(element => {
+                element.Selezionata = false;
+              });
+              this.immaginiRilevateFuoriCategoria = resoconto.Immagini;
+              if (this.immaginiRilevateFuoriCategoria.length > 0) {
+                this.bImmaginiFuoriCategoria = true;
+              } else {
+                alert('Nessuna immagine fuori categoria rilevata');
+              }
+              // console.log('Trova immagini fuori categoria: ', resoconto);
+            } else {
+              this.immaginiRilevateFuoriCategoria = undefined;
+              alert(data2);
+            }
+          }
+        }
+    );
+  }
+
+  cambiaSoloSuAltro() {
+    this.soloSuAltro = !this.soloSuAltro;
+    console.log('Cambio soloSuAltro', this.soloSuAltro);
+    localStorage.setItem('LooVFRicercaSoloSuAltro', this.soloSuAltro ? 'S' : 'N');
+  }
+
+  cambiaCercaExif() {
+    this.cercaExif = !this.cercaExif;
+    console.log('Cambio cercaexif', this.cercaExif);
+    localStorage.setItem('LooVFRicercaCercaExif', this.cercaExif ? 'S' : 'N');
+  }
+
+  cambiaCercaTag() {
+    this.cercaTag = !this.cercaTag;
+    console.log('Cambio cercatag', this.cercaTag);
+    localStorage.setItem('LooVFRicercaCercaTag', this.cercaTag ? 'S' : 'N');
+  }
+
   cambiaRicCarattere() {
     this.ricercaPerCarattere = !this.ricercaPerCarattere;
+    console.log('Cambio ric car', this.ricercaPerCarattere);
     localStorage.setItem('LooVFRicercaPerCarattere', this.ricercaPerCarattere ? 'S' : 'N');
   }
 
   cambiaRicAnd() {
     this.ricercaPerAnd = !this.ricercaPerAnd;
+    console.log('Cambio ric and', this.ricercaPerAnd);
     localStorage.setItem('LooVFRicercaPerAnd', this.ricercaPerAnd ? 'S' : 'N');
   }
 
   cambiaRicAnd2() {
     this.ricercaPerAnd2 = !this.ricercaPerAnd2;
+    console.log('Cambio ric and2', this.ricercaPerAnd2);
     localStorage.setItem('LooVFRicercaPerAnd2', this.ricercaPerAnd2 ? 'S' : 'N');
   }
 
@@ -425,6 +514,18 @@ export class AppComponent {
       case 5:
         tipologia = 'NOMEFILE';
         break;
+      case 6:
+        tipologia = '0001';
+        break;
+      case 7:
+        tipologia = 'HASHBN';
+        break;
+      case 8:
+        tipologia = 'HASHVAL';
+        break;
+      case 9:
+        tipologia = 'HASH2VAL';
+        break;
     }
 
     return tipologia;
@@ -437,6 +538,7 @@ export class AppComponent {
       return;
     }
 
+    this.immaginiUgualiConFiltro = undefined;
     this.apiService.ritornaImmaginiUguali(this, tipologia)
       .map((response: any) => response)
       .subscribe(
@@ -637,6 +739,28 @@ export class AppComponent {
     );
   }
 
+  salvaTag() {
+    let tag = this.tagCategoria;
+    while (tag.indexOf(';;') > -1) {
+      tag = tag.replace(';;', ';');
+    }
+    console.log('Salvo tag', tag);
+    this.apiService.salvaTag(this, this.idCategoriaSelezionata, tag)
+      .map((response: any) => response)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            const data2 = this.apiService.prendeSoloDatiValidi(data);
+            if (data2.indexOf('ERROR:') === -1) {
+              alert('Tag modificato');
+            } else {
+              alert(data2);
+            }
+          }
+        }
+    );
+  }
+
   ricercaNuoveCategorie() {
     this.apiService.nuoveCategorie(this, this.idCategoriaSelezionata)
       .map((response: any) => response)
@@ -687,8 +811,11 @@ export class AppComponent {
   }
 
   creaNuovaCategoria() {
-    console.log('Click Crea Nuova Categoria', this.nuovaCategoriaSelezionata);
-    this.nomeNuovaCategoria = this.nuovaCategoriaSelezionata;
+    if (this.nuovaCategoriaSelezionata) {
+      console.log('Click Crea Nuova Categoria', this.nuovaCategoriaSelezionata);
+      this.nomeNuovaCategoria = this.nuovaCategoriaSelezionata.toLowerCase();
+      this.nomeNuovaCategoria = this.nomeNuovaCategoria.substring(0, 1).toUpperCase() + this.nomeNuovaCategoria.substring(1, this.nomeNuovaCategoria.length);
+    }
     this.mascheraNomeNuovaCategoria = true;
   }
 
@@ -705,7 +832,7 @@ export class AppComponent {
             const data2 = this.apiService.prendeSoloDatiValidi(data);
             if (data2.indexOf('ERROR:') === -1) {
               this.caricaCategorie();
-              this.mascheraNuoveCategorie = false;
+              this.mascheraNomeNuovaCategoria = false;
               alert('Nuova Categoria Creata');
             } else {
               alert(data2);

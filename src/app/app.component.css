@@ -157,10 +157,10 @@ ul {
 .menuFinestra {
     position: absolute;
     left: 30%;
-    top: 27%;
+    top: 25%;
     font-family: math;
     width: 40%;
-    height: 45%;
+    height: 47%;
     padding: 3px;
     border: 1px solid #999;
     background-color: #f7f0c3;
@@ -172,7 +172,7 @@ ul {
 .mascheraFuoriCategoria {
     position: absolute;
     left: 30%;
-    top: 40%;
+    top: 30%;
     font-family: math;
     width: 40%;
     height: auto;
@@ -273,10 +273,10 @@ ul {
     .menuFinestra {
         position: absolute;
         left: 15%;
-        top: 25%;
+        top: 15%;
         font-family: math;
         width: 70%;
-        height: 50%;
+        height: 70%;
         padding: 3px;
         border: 1px solid #999;
         background-color: #f7f0c3;
@@ -294,7 +294,7 @@ ul {
     .mascheraFuoriCategoria {
         position: absolute;
         left: 15%;
-        top: 40%;
+        top: 30%;
         font-family: math;
         width: 70%;
         height: auto;

@@ -109,6 +109,15 @@
     </li>
     <li>
       <div style="width: 35px; float: left;">
+        <img src="assets/immagini/icons/piu.png" title="Crea nuova categoria" class="iconaMenu" (click)="creaNuovaCategoria()" />
+      </div>
+      <div style="width: calc(100% - 35px); padding-top: 7px; float: left;">
+        Crea Nuova Categoria
+      </div>
+      <div style="clear: both;"></div>
+    </li>
+    <li>
+      <div style="width: 35px; float: left;">
         <img src="assets/immagini/icons/icona_equalizz.png" class="iconaMenu" (click)="mascheraSistemazioni = true" />&nbsp;
       </div>
       <div style="width: calc(100% - 35px); padding-top: 7px; float: left;">
@@ -191,12 +200,42 @@
           </td>
         </tr>
         <tr>
+          <td colspan="2" style="color: red; text-align: right;">
+            ^ per ricerca da inizio, $ per carattere, % per numero
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Tag
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <input type="text" [(ngModel)]="tagCategoria" style="width: 95%;" />
+          </td>
+          <td>
+            <img src="assets/immagini/icons/icona_SALVA.png" class="iconaMenu" (click)="salvaTag()" />
+          </td>
+        </tr>
+        <tr>
           <td><span *ngIf="ricercaPerAnd">And</span><span *ngIf="!ricercaPerAnd">Or</span></td>
           <td><input type="checkbox" [checked]="ricercaPerAnd" (change)="cambiaRicAnd()"/></td>
         </tr>
         <tr>
+          <td>Solo categoria Altre</td>
+          <td><input type="checkbox" [checked]="soloSuAltro" (change)="cambiaSoloSuAltro()"/></td>
+        </tr>
+        <tr>
+          <td>Cerca in Exif</td>
+          <td><input type="checkbox" [checked]="cercaExif" (change)="cambiaCercaExif()"/></td>
+        </tr>
+        <tr>
+          <td>Cerca Tag</td>
+          <td><input type="checkbox" [checked]="cercaTag" (change)="cambiaCercaTag()"/></td>
+        </tr>
+        <tr>
           <td style="white-space: nowrap;">Filtro Completo</td>
-          <td style="text-align: left; white-space: nowrap;"><input type="checkbox" [checked]="ricercaPerCarattere" (change)="cambiaRicCarattere()"/></td>
+          <td style="text-align: left; white-space: nowrap;">
+            <input type="checkbox" [checked]="ricercaPerCarattere" (change)="cambiaRicCarattere()"/>
+          </td>
         </tr>
         <tr *ngIf="!ricercaPerCarattere">
           <td style="white-space: nowrap;">
@@ -210,8 +249,12 @@
     </div>
 
     <div class="bottoneChiusura" style="margin-top: 35px;">
-      <img src="assets/immagini/icons/icona_CERCA.png" class="iconaMenu" (click)="immaginiFuoriCategoria()" />
+      <img src="assets/immagini/icons/icona_CERCA.png" title="Cerca nella categoria" class="iconaMenu" (click)="immaginiFuoriCategoria()" />
     </div>
+
+    <!-- <div class="bottoneChiusura" style="margin-top: 135px;">
+      <img src="assets/immagini/icons/icona_CERCA.png" title="Cerca in tutte le categorie" class="iconaMenu" (click)="immaginiFuoriCategoriaTutte()" />
+    </div> -->
 
     <div class="bottoneChiusura">
       <img src="assets/immagini/icons/elimina_quadrato.png" class="iconaMenu" (click)="mascheraFuoriCategoria = false" />
@@ -219,6 +262,7 @@
   </div>
 
   <div *ngIf="bImmaginiFuoriCategoria" class="immaginiFuoriCategoria ombra" style="overflow: hidden;">
+    <!-- (ricaricaImmagini)="immaginiFuoriCategoria()" -->
     <ricerche
       [dimensioniSchermo]="dimensioniSchermo"
       [immaginiRilevate]="immaginiRilevateFuoriCategoria"
@@ -226,7 +270,6 @@
       [immagineAttuale]="immagineAttuale"
       [Categorie]="Categorie"
 
-      (ricaricaImmagini)="immaginiFuoriCategoria()"
       (caricaProssimaImmagine)="caricaProssimaImmagine()"
     >
     </ricerche>
@@ -241,35 +284,51 @@
       <div style="width: calc(100% - 4px); height: 27px; padding: 2px; border-bottom: 1px solid #999; float: left; overflow: auto;">
         <table [cellPadding]="0" [cellSpacing]="0" style="width: 100%; font-family: math; font-size: 14px;">
           <tr style="background-color: #ebe8cb;">
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;"><b>Metodo di ricerca</b></td>
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;"><b>Metodo&nbsp;</b></td>
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
               <input name="options" type="radio" [value]="1"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(1)" >&nbsp;
-              Data
+              Data&nbsp;
             </td>
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
               <input name="options" type="radio" [value]="2"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(2)" >&nbsp;
-              Dimensioni
+              Dimensioni&nbsp;
             </td>
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
               <input name="options" type="radio" [value]="3"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(3)" >&nbsp;
-              Exif
+              Exif&nbsp;
             </td>
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
               <input name="options" type="radio" [value]="4"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(4)" >&nbsp;
-              Hash
+              Hash&nbsp;
             </td>
-            <td style="width: 16%; white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+              <input name="options" type="radio" [value]="8"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(8)" >&nbsp;
+              H.Val&nbsp;
+            </td>
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+              <input name="options" type="radio" [value]="7"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(7)" >&nbsp;
+              Hash B/N&nbsp;
+            </td>
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+              <input name="options" type="radio" [value]="9"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(9)" >&nbsp;
+              H2.Val&nbsp;
+            </td>
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
+              <input name="options" type="radio" [value]="6"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(6)" >&nbsp;
+              0001&nbsp;
+            </td>
+            <td style="white-space: nowrap; border-right: 1px solid #999; overflow: hidden;">
               <input name="options" type="radio" [value]="5"  [(ngModel)]="tipoRicercaUguali" (click)="cambioTipoUguali(5)" >&nbsp;
-              Nome File
+              Nome File&nbsp;
             </td>
-            <td style="width: 3%; white-space: nowrap; text-align: center; overflow: hidden;">
+            <td style="white-space: nowrap; text-align: center; overflow: hidden;">
               <img src="assets/immagini/icons/icona_CERCA.png" class="iconaUguali" (click)="esegueRicercaUguali()" />
             </td>
           </tr>
         </table>
       </div>
       <div style="width: 100%; height: calc(100% - 35px); float: left;">
-        <div style="width: 25%; padding: 2px; float: left; height: 100%; border-right: 1px solid #999; overflow: auto;">
+        <div style="width: 15%; padding: 2px; float: left; height: 100%; border-right: 1px solid #999; overflow: auto;">
           <div *ngFor="let c of immaginiUguali" style="width: 100%; overflow: hidden; cursor: pointer; font-family: math; font-size: 12px; white-space: nowrap;" 
             (click)="rigaSelezionataUguali(c)" [style.color]="c.Premuto ? 'red' : 'black'"
             [style.background-color]="c.Pari ? 'transparent' : '#fff9d5'"
@@ -278,7 +337,7 @@
             <div style="width: calc(100% - 30px); float: left;">{{c.Valore}}</div>
           </div>
         </div>
-        <div style="width: calc(75% - 12px); float: left; padding: 2px; height: 100%; overflow: auto;">
+        <div style="width: calc(85% - 12px); float: left; padding: 2px; height: 100%; overflow: auto;">
 
           <div style="width: 100%; height: 100%;">
             <!-- <div style="width: 100%;
@@ -322,11 +381,14 @@
   </div>
 
   <div *ngIf="ricercheCategoria" class="ricercheCategoria ombra">
-    <div style="width: 100%; height: 30px; float: left; border-bottom: 1px solid #999;">
+    <div style="width: calc(100% - 40px); height: 30px; float: left; border-bottom: 1px solid #999;">
       <table [cellPadding]="0" [cellSpacing]="0" style="width: 100%; font-family: math; font-size: 14px;">
         <tr>
           <td>
             <b>Immagini Categoria</b>
+          </td>
+          <td>
+            ^ inizio, $ car., % per num.
           </td>
           <td>
             Filtro
@@ -343,6 +405,7 @@
       </table>
     </div>
     <div style="width: 100%; height: calc(100% - 30px); float: left; overflow: hidden;">
+      <!-- (ricaricaImmagini)="immaginiCategoria()" -->
       <ricerche
         [dimensioniSchermo]="dimensioniSchermo"
         [immaginiRilevate]="immaginiRilevateCategoria"
@@ -350,7 +413,6 @@
         [immagineAttuale]="immagineAttuale"
         [Categorie]="Categorie"
 
-        (ricaricaImmagini)="immaginiCategoria()"
         (caricaProssimaImmagine)="caricaProssimaImmagine()"
       >
       </ricerche>
@@ -362,16 +424,17 @@
   </div>
   
   <div *ngIf="mascheraNuoveCategorie" class="mascheraNuoveCategorie ombra">
-    <div style="width: 25%; float: left; height: 100%; border-right: 1px solid #999; overflow: auto;">
+    <div style="width: 15%; float: left; height: 100%; border-right: 1px solid #999; overflow: auto;">
       <table style="width: 100%; font-family: Math; font-size: 14px;">
-        <tr *ngFor="let c of nuoveCategorie" style="cursor: pointer;" (click)="selezioneNuovaCategoria(c)" [style.color]="c.Premuto ? 'red' : 'black'"
+        <tr *ngFor="let c of nuoveCategorie" style="cursor: pointer;" (click)="selezioneNuovaCategoria(c)" 
+          [style.color]="c.Premuto ? 'red' : 'black'"
           [style.background-color]="c.Pari ? 'transparent' : '#fff9d5'">
           <td>{{c.Quante}}</td>
           <td>{{c.Categoria}}</td>
         </tr>
       </table>
     </div>
-    <div style="width: calc(75% - 35px); float: left; height: 100%; overflow: hidden;">
+    <div style="width: calc(85% - 35px); float: left; height: 100%; overflow: hidden;">
       <ricerche
         [dimensioniSchermo]="dimensioniSchermo"
         [immaginiRilevate]="nuoveCategorieFiltro"
